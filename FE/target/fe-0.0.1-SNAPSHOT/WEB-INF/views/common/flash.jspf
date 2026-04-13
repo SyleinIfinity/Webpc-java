@@ -1,0 +1,19 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<c:if test="${not empty flashSuccess}">
+    <div class="alert alert-success alert-dismissible fade show m-0 rounded-0 text-center" role="alert">
+        <c:out value="${flashSuccess}" />
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</c:if>
+<c:if test="${not empty flashError}">
+    <div class="alert alert-danger alert-dismissible fade show m-0 rounded-0 text-center" role="alert">
+        <c:out value="${flashError}" />
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</c:if>
+<c:if test="${not empty flashInfo}">
+    <div class="alert alert-info alert-dismissible fade show m-0 rounded-0 text-center" role="alert">
+        <c:out value="${flashInfo}" />
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</c:if>

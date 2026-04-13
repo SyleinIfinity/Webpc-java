@@ -1,0 +1,7 @@
+ai-workspace/
+Data/
+Images/
+.codex
+dbBanLinhKienPC_postgres.sql
+dbBanLinhKienPC.sql
+note.txt

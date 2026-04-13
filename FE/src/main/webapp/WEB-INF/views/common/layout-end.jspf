@@ -1,0 +1,55 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    </main>
+    <footer class="footer">
+        <div class="container py-5">
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title mb-3">TechParts</h5>
+                    <p class="footer-text">Cửa hàng linh kiện máy tính theo mô hình Java Web + JSP.</p>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title mb-3">Điều Hướng</h5>
+                    <ul class="footer-links">
+                        <li><a href="${ctx}/Home">Trang Chủ</a></li>
+                        <li><a href="${ctx}/Product">Sản phẩm</a></li>
+                        <li><a href="${ctx}/BuildPC">Xây dựng cấu hình</a></li>
+                        <c:if test="${featurePromotionsEnabled}">
+                            <li><a href="${ctx}/Promotions">Khuyến mãi</a></li>
+                        </c:if>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title mb-3">Tài Khoản</h5>
+                    <ul class="footer-links">
+                        <li><a href="${ctx}/InfoUser">Hồ sơ cá nhân</a></li>
+                        <li><a href="${ctx}/InfoAddress">Sổ địa chỉ</a></li>
+                        <c:if test="${featureOrdersEnabled}">
+                            <li><a href="${ctx}/DonHang">Lịch sử đơn hàng</a></li>
+                        </c:if>
+                        <c:if test="${featureCartEnabled}">
+                            <li><a href="${ctx}/Cart">Giỏ hàng</a></li>
+                        </c:if>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="footer-title mb-3">Hệ Thống</h5>
+                    <p class="footer-text mb-0">Frontend Java Web + JSP đang đồng bộ dần các luồng nghiệp vụ với backend Spring Boot.</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="mb-0 text-center">© 2026 TechParts.</p>
+            </div>
+        </div>
+    </footer>
+    <c:if test="${empty sessionScope.UserToken}">
+        <%@ include file="/WEB-INF/views/common/login-modal.jspf" %>
+    </c:if>
+    <script>
+        window.APP_CTX = '${ctx}';
+    </script>
+    <c:if test="${featureChatEnabled}">
+        <%@ include file="/WEB-INF/views/common/chat-box.jspf" %>
+    </c:if>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

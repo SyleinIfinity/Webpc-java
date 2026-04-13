@@ -1,0 +1,208 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<style>
+    .chat-widget-toggle {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: 56px;
+        height: 56px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #0d6efd, #0043a8);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(13, 110, 253, 0.4);
+        z-index: 1200;
+    }
+    .chat-widget-box {
+        position: fixed;
+        bottom: 92px;
+        right: 24px;
+        width: 360px;
+        max-width: calc(100vw - 20px);
+        height: 500px;
+        max-height: calc(100vh - 120px);
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+        border: 1px solid #e9ecef;
+        z-index: 1200;
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    .chat-header {
+        background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        color: #fff;
+        padding: 12px 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .chat-body {
+        flex: 1;
+        padding: 12px;
+        overflow-y: auto;
+        background: #f8f9fa;
+    }
+    .chat-message {
+        max-width: 85%;
+        padding: 8px 12px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        line-height: 1.45;
+        word-break: break-word;
+    }
+    .chat-message.user {
+        margin-left: auto;
+        background: #0d6efd;
+        color: #fff;
+    }
+    .chat-message.bot {
+        margin-right: auto;
+        background: #fff;
+        color: #212529;
+        border: 1px solid #dee2e6;
+    }
+    .chat-footer {
+        border-top: 1px solid #eee;
+        padding: 10px;
+        display: flex;
+        gap: 8px;
+        background: #fff;
+    }
+    .chat-footer input {
+        flex: 1;
+        border: 1px solid #ced4da;
+        border-radius: 20px;
+        padding: 8px 12px;
+        outline: none;
+    }
+    .chat-footer button {
+        border: none;
+        border-radius: 20px;
+        background: #0d6efd;
+        color: #fff;
+        padding: 8px 14px;
+    }
+</style>
+
+<button class="chat-widget-toggle" id="btnOpenChat" type="button" title="Chat hỗ trợ">
+    <i class="bi bi-chat-dots-fill"></i>
+</button>
+
+<div class="chat-widget-box" id="boxChat">
+    <div class="chat-header">
+        <strong>Trợ lý TechParts</strong>
+        <button type="button" class="btn btn-sm btn-light py-0 px-2" id="btnCloseChat">×</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+        <div class="chat-message bot">Xin chào! Mình có thể hỗ trợ bạn chọn linh kiện, mã khuyến mãi hoặc quy trình đặt hàng.</div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="chatInput" placeholder="Nhập câu hỏi...">
+        <button type="button" id="chatSendBtn">Gửi</button>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var btnOpen = document.getElementById('btnOpenChat');
+        var btnClose = document.getElementById('btnCloseChat');
+        var box = document.getElementById('boxChat');
+        var input = document.getElementById('chatInput');
+        var sendBtn = document.getElementById('chatSendBtn');
+        var body = document.getElementById('chatBody');
+
+        if (!btnOpen || !btnClose || !box || !input || !sendBtn || !body) {
+            return;
+        }
+
+        function escapeHtml(value) {
+            return (value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function appendMessage(role, content) {
+            var div = document.createElement('div');
+            div.className = 'chat-message ' + (role === 'user' ? 'user' : 'bot');
+            div.innerHTML = escapeHtml(content);
+            body.appendChild(div);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function renderHistory(items) {
+            if (!Array.isArray(items) || items.length === 0) {
+                return;
+            }
+            body.innerHTML = '';
+            items.forEach(function (item) {
+                appendMessage(item.role === 'user' ? 'user' : 'bot', item.content || '');
+            });
+        }
+
+        function loadHistory() {
+            fetch(window.APP_CTX + '/Chat/History')
+                .then(function (response) { return response.json(); })
+                .then(function (payload) {
+                    renderHistory(payload.items || []);
+                })
+                .catch(function () {});
+        }
+
+        function sendMessage() {
+            var message = (input.value || '').trim();
+            if (!message) {
+                return;
+            }
+            appendMessage('user', message);
+            input.value = '';
+            fetch(window.APP_CTX + '/Chat/Send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            })
+                .then(function (response) { return response.json(); })
+                .then(function (payload) {
+                    if (payload && payload.success && payload.reply && payload.reply.content) {
+                        appendMessage('bot', payload.reply.content);
+                    } else if (payload && payload.message) {
+                        appendMessage('bot', payload.message);
+                    }
+                })
+                .catch(function () {
+                    appendMessage('bot', 'Đã có lỗi khi gửi tin nhắn. Vui lòng thử lại.');
+                });
+        }
+
+        btnOpen.addEventListener('click', function () {
+            box.style.display = 'flex';
+            btnOpen.style.display = 'none';
+            sessionStorage.setItem('webpc_chat_open', '1');
+            loadHistory();
+            input.focus();
+        });
+
+        btnClose.addEventListener('click', function () {
+            box.style.display = 'none';
+            btnOpen.style.display = 'inline-flex';
+            sessionStorage.setItem('webpc_chat_open', '0');
+        });
+
+        sendBtn.addEventListener('click', sendMessage);
+        input.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        if (sessionStorage.getItem('webpc_chat_open') === '1') {
+            btnOpen.click();
+        }
+    })();
+</script>

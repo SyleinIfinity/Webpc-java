@@ -1,0 +1,10 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<c:if test="${not empty flashSuccess}">
+    <div class="alert alert-success"><c:out value="${flashSuccess}" /></div>
+</c:if>
+<c:if test="${not empty flashError}">
+    <div class="alert alert-danger"><c:out value="${flashError}" /></div>
+</c:if>
+<c:if test="${not empty flashInfo}">
+    <div class="alert alert-info"><c:out value="${flashInfo}" /></div>
+</c:if>

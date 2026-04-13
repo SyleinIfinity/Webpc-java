@@ -1,0 +1,46 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <i class="fas fa-user-shield" style="margin-right: 10px;"></i> WEBPC STAFF
+        </div>
+        <ul class="menu">
+            <c:choose>
+                <c:when test="${menuArea == 'admin'}">
+                    <li><a href="${ctx}/Admin/Dashboard" class="${activeMenu == 'dashboard' ? 'active' : ''}"><i class="fas fa-chart-pie"></i> Tổng quan</a></li>
+                    <li><a href="${ctx}/Admin/PhieuNhap" class="${activeMenu == 'phieunhap' ? 'active' : ''}"><i class="fas fa-truck-loading"></i> Phiếu nhập</a></li>
+                    <li><a href="${ctx}/Admin/Luong" class="${activeMenu == 'luong' ? 'active' : ''}"><i class="fas fa-hand-holding-usd"></i> Lương & KPI</a></li>
+                    <li><a href="${ctx}/Admin/SanPham" class="${activeMenu == 'sanpham' ? 'active' : ''}"><i class="fas fa-box"></i> Sản phẩm</a></li>
+                    <li><a href="${ctx}/Admin/ThongSo" class="${activeMenu == 'thongso' ? 'active' : ''}"><i class="fas fa-sliders"></i> Thông số</a></li>
+                    <li><a href="${ctx}/Admin/NhanVien" class="${activeMenu == 'nhanvien' ? 'active' : ''}"><i class="fas fa-user-tie"></i> Nhân viên</a></li>
+                    <li><a href="${ctx}/Admin/KhachHang" class="${activeMenu == 'khachhang' ? 'active' : ''}"><i class="fas fa-users"></i> Khách hàng</a></li>
+                </c:when>
+                <c:when test="${menuArea == 'sale'}">
+                    <li><a href="${ctx}/Sale/Dashboard" class="${activeMenu == 'dashboard' ? 'active' : ''}"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="${ctx}/Sale/KhuyenMai" class="${activeMenu == 'khuyenmai' ? 'active' : ''}"><i class="fas fa-gift"></i> Khuyến mãi</a></li>
+                    <li><a href="${ctx}/Sale/DonHang" class="${activeMenu == 'donhang' ? 'active' : ''}"><i class="fas fa-shopping-bag"></i> Đơn hàng</a></li>
+                </c:when>
+                <c:otherwise>
+                    <li><a href="${ctx}/Tech/Dashboard" class="${activeMenu == 'dashboard' ? 'active' : ''}"><i class="fas fa-screwdriver-wrench"></i> Dashboard</a></li>
+                </c:otherwise>
+            </c:choose>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="top-header">
+            <h3 style="margin:0;"><c:out value="${pageTitle}" /></h3>
+            <div class="user-info">
+                <span>Xin chào <strong><c:out value="${sessionScope.UserName}" /></strong> (<c:out value="${sessionScope.RoleName}" />)</span>
+                <a href="${ctx}/Account/Logout" class="ms-3">Đăng xuất</a>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <%@ include file="/WEB-INF/views/common/flash.jspf" %>
+            <c:if test="${not empty pageError}">
+                <div class="alert alert-danger mb-4">
+                    <strong>Lỗi:</strong> <c:out value="${pageError}" />
+                </div>
+            </c:if>

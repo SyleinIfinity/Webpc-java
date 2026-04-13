@@ -1,0 +1,103 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <c:if test="${not empty extraStyles}">
+        ${extraStyles}
+    </c:if>
+    <c:set var="navHomeClass" value="nav-link" />
+    <c:set var="navProductClass" value="nav-link" />
+    <c:set var="navBuildPcClass" value="nav-link" />
+    <c:set var="navPromotionClass" value="nav-link" />
+    <c:set var="navOrderClass" value="nav-link" />
+    <c:if test="${activeNav == 'home'}">
+        <c:set var="navHomeClass" value="nav-link active" />
+    </c:if>
+    <c:if test="${activeNav == 'product'}">
+        <c:set var="navProductClass" value="nav-link active" />
+    </c:if>
+    <c:if test="${activeNav == 'buildpc'}">
+        <c:set var="navBuildPcClass" value="nav-link active" />
+    </c:if>
+    <c:if test="${activeNav == 'promotions'}">
+        <c:set var="navPromotionClass" value="nav-link active" />
+    </c:if>
+    <c:if test="${activeNav == 'orders'}">
+        <c:set var="navOrderClass" value="nav-link active" />
+    </c:if>
+    <c:set var="cartCount" value="0" />
+    <c:if test="${not empty sessionScope.Cart and not empty sessionScope.Cart.items}">
+        <c:set var="cartCount" value="${fn:length(sessionScope.Cart.items)}" />
+    </c:if>
+</head>
+<body>
+    <%@ include file="/WEB-INF/views/common/flash.jspf" %>
+    <header class="header-main">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="${ctx}/Home">
+                    <i class="bi bi-cpu-fill text-primary fs-3 me-2"></i>
+                    <span class="fw-bold fs-4">TechParts</span>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto me-4">
+                        <li class="nav-item"><a class="${navHomeClass}" href="${ctx}/Home">Trang Chủ</a></li>
+                        <li class="nav-item"><a class="${navProductClass}" href="${ctx}/Product">Sản phẩm</a></li>
+                        <li class="nav-item"><a class="${navBuildPcClass}" href="${ctx}/BuildPC">Cấu hình</a></li>
+                        <c:if test="${featurePromotionsEnabled}">
+                            <li class="nav-item"><a class="${navPromotionClass}" href="${ctx}/Promotions">Khuyến Mãi</a></li>
+                        </c:if>
+                        <c:if test="${featureOrdersEnabled and not empty sessionScope.UserToken}">
+                            <li class="nav-item"><a class="${navOrderClass}" href="${ctx}/DonHang">Đơn hàng</a></li>
+                        </c:if>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        <form class="search-box me-3" action="${ctx}/Product" method="get">
+                            <i class="bi bi-search"></i>
+                            <input type="text" name="search" placeholder="Tìm kiếm sản phẩm..." value="${fn:escapeXml(currentSearch)}">
+                        </form>
+
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.UserToken}">
+                                <div class="dropdown me-3">
+                                    <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="userDropdown" data-bs-toggle="dropdown">
+                                        <i class="bi bi-person-circle fs-4 text-primary me-2"></i>
+                                        <span class="fw-bold d-none d-md-block"><c:out value="${sessionScope.UserName}" /></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><span class="dropdown-item-text text-muted small">Xin chào, <c:out value="${sessionScope.UserName}" /></span></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="${ctx}/InfoUser"><i class="bi bi-person-badge me-2"></i>Hồ sơ cá nhân</a></li>
+                                        <li><a class="dropdown-item" href="${ctx}/InfoAddress"><i class="bi bi-geo-alt me-2"></i>Sổ địa chỉ</a></li>
+                                        <c:if test="${featureOrdersEnabled}">
+                                            <li><a class="dropdown-item" href="${ctx}/DonHang"><i class="bi bi-box-seam me-2"></i>Lịch sử đơn hàng</a></li>
+                                        </c:if>
+                                        <c:if test="${featurePromotionsEnabled}">
+                                            <li><a class="dropdown-item" href="${ctx}/Promotions/Saved"><i class="bi bi-bookmark-heart me-2"></i>Kho khuyến mãi</a></li>
+                                        </c:if>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger" href="${ctx}/Login/Logout"><i class="bi bi-box-arrow-right me-2"></i>Đăng xuất</a></li>
+                                    </ul>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="#" class="text-dark me-3" data-bs-toggle="modal" data-bs-target="#loginModal" title="Đăng nhập">
+                                    <i class="bi bi-person fs-5"></i>
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <c:if test="${featureCartEnabled}">
+                            <a href="${ctx}/Cart" class="text-dark position-relative ${activeNav == 'cart' ? 'text-primary' : ''}">
+                                <i class="bi bi-cart3 fs-5"></i>
+                                <c:if test="${cartCount > 0}">
+                                    <span class="cart-badge"><c:out value="${cartCount}" /></span>
+                                </c:if>
+                            </a>
+                        </c:if>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container-fluid p-0">
