@@ -2,6 +2,7 @@ package com.webpc.fenhanvien.common;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.webpc.fenhanvien.config.AppConfig;
 import com.webpc.fenhanvien.model.auth.UserLoginResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -19,6 +20,7 @@ public abstract class BaseServlet extends HttpServlet {
     protected void render(HttpServletRequest request, HttpServletResponse response, String viewPath)
         throws ServletException, IOException {
         transferFlash(request);
+        request.setAttribute("backendApiBaseUrl", AppConfig.getInstance().getBackendApiBaseUrl());
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType("text/html; charset=UTF-8");
         request.getRequestDispatcher("/WEB-INF/views/" + viewPath).forward(request, response);

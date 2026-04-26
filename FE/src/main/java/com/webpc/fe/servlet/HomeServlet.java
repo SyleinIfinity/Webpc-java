@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.List;
 
-@WebServlet(urlPatterns = {"/Home", "/Home/Index"})
+@WebServlet(urlPatterns = {"/Home", "/Home/Index", "/home", "/home/index"})
 public class HomeServlet extends BaseServlet {
 
     private final CatalogService catalogService = new CatalogService();

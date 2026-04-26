@@ -32,7 +32,7 @@
                             <p class="text-secondary mb-4">Đăng nhập bằng tài khoản nhân viên để vào đúng khu vực theo vai trò.</p>
                             <a href="${pageContext.request.contextPath}/Account/Login" class="btn btn-primary btn-lg px-4">Đăng nhập hệ thống</a>
                             <div class="mt-4 pt-4 border-top text-secondary small">
-                                Backend API mặc định: <code>http://localhost:8081/api/</code>
+                                Backend API đang dùng: <code><c:out value="${backendApiBaseUrl}"/></code>
                             </div>
                         </div>
                     </div>

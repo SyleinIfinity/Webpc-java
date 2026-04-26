@@ -1,0 +1,16 @@
+[Unit]
+Description=WEBPC stack (Postgres + Backend + Frontend) via Docker Compose
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/webpc/deploy
+ExecStart=/usr/bin/env docker compose -f /opt/webpc/deploy/docker-compose.yml --env-file /opt/webpc/deploy/.env up -d
+ExecStop=/usr/bin/env docker compose -f /opt/webpc/deploy/docker-compose.yml --env-file /opt/webpc/deploy/.env down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=webpc.target

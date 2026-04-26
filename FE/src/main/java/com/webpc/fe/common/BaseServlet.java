@@ -21,6 +21,7 @@ public abstract class BaseServlet extends HttpServlet {
         throws ServletException, IOException {
         transferFlash(request);
         exposeCommonFlags(request);
+        request.setAttribute("backendApiBaseUrl", AppConfig.getInstance().getBackendApiBaseUrl());
         request.setAttribute("rawRequestPath", resolveCurrentPath(request));
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
         response.setContentType("text/html; charset=UTF-8");

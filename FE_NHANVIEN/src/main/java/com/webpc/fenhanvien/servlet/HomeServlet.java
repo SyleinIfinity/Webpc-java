@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = {"/Home", "/Home/Index"})
+@WebServlet(urlPatterns = {"/Home", "/Home/Index", "/home", "/home/index"})
 public class HomeServlet extends BaseServlet {
 
     @Override
