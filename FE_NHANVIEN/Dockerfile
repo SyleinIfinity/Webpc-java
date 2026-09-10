@@ -9,4 +9,4 @@ RUN mvn -q -DskipTests package
 
 EXPOSE 8080
 
-CMD ["bash", "-lc", "mvn -q -DskipTests jetty:run -Djetty.http.port=8080"]
+CMD ["bash", "-lc", "mvn -q -DskipTests jetty:run -Djetty.http.port=${PORT:-8080}"]

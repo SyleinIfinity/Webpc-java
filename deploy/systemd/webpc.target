@@ -1,7 +1,0 @@
-[Unit]
-Description=WEBPC services target
-Wants=webpc-stack.service
-After=webpc-stack.service
-
-[Install]
-WantedBy=multi-user.target
